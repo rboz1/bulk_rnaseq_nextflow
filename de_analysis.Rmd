@@ -24,19 +24,6 @@ library(sessioninfo)
 session_info()
 ```
 
-### general quality of seq reads
-```{r}
-# The base quality was high with phred scores above 35 and very few bases unable to be called. >98.8% of reads aligned to the reference genome across all samples
-# with the STAR aligner. Additionally, adapters were successfully trimmed from the reads and GC content had a normal distribution matching the expected 
-# distribution of the human genome. However, the majority of reads were duplicate reads which can potentially indicate PCR bias. Futhermore, 1% of reads, although
-# a small amount, were overrepresented in the sequencing run. To further investigate potential contamination of the sequencing run or reads with high biological 
-# significance, the top 5 overrepresented sequences were searched using BLASTN. The BLASTN results aligned with pathogens such as COVID with a high percent 
-# identity (>94%) and e-values of <= 1e-10, indicating a small amount of contamination was likely. The "severe acute respiratory syndrome coronavirus 
-# 2 genome assembly" represented the majority of BLAST results, but there were other pathogens (virus, phage, bacteria) that aligned to the overrepresented 
-# reads as well. The contamination is small and these reads can possibly be removed computationally but if unsuccessful samples will need to be re-extracted and
-# re-sequenced.
-```
-
 # filter count data barplot
 ```{r}
 # read in counts
@@ -72,13 +59,6 @@ dim(counts)
 # 63241 genes
 dim(filtered_counts)
 # 29444 genes
-```
-
-### filtering strategy
-```{r}
-# DESeq2 recommends filtering out genes with count of < 10 reads for bulk RNA-seq. I decided to filter out for < 10 reads across all samples and not a smaller
-# amount of samples. Before filtering 63241 genes were included in the dataset and the was reduced to 29444 genes post-filtering. The difference between the
-# filtered and non-filtered counts is not possible to see on the barplot because of the y-axis scale.
 ```
 
 # DESeq2/top 10 significant genes
@@ -136,18 +116,6 @@ num_sig_genes <- res %>%
 
 length(num_sig_genes$padj)
 ```
-
-# DAVID/enrichr
-```{r}
-# ID	Gene Name	Species	GOTERM_BP_DIRECT	GOTERM_CC_DIRECT	GOTERM_MF_DIRECT	INTERPRO	KEGG_PATHWAY	OMIM_DISEASE	PIR_SUPERFAMILY	SMART	UP_KW_BIOLOGICAL_PROCESS	UP_KW_CELLULAR_COMPONENT	UP_KW_DISEASE	UP_KW_DOMAIN	UP_KW_LIGAND	UP_KW_MOLECULAR_FUNCTION	UP_KW_PTM	UP_SEQ_FEATURE
-#ENSG00000253846	protocadherin gamma subfamily A, 10(PCDHGA10)	Homo sapiens	GO:0007155~cell adhesion,GO:0007156~homophilic cell adhesion via plasma membrane adhesion molecules,GO:0007399~nervous system development,	GO:0005886~plasma membrane,	GO:0005509~calcium ion binding,	IPR002126:Cadherin-like_dom,IPR013164:Cadherin_N,IPR015919:Cadherin-like_sf,IPR020894:Cadherin_CS,IPR031904:Cadherin_CBD,IPR032455:Cadherin_C,IPR050174:Protocadherin/Cadherin-CA,				SM00112:CA,	KW-0130~Cell adhesion,	KW-0472~Membrane,KW-1003~Cell membrane,		KW-0677~Repeat,KW-0732~Signal,KW-0812~Transmembrane,KW-1133~Transmembrane helix,	KW-0106~Calcium,		KW-0325~Glycoprotein,	CARBOHYD:N-linked (GlcNAc...) asparagine,COMPBIAS:Polar residues,DOMAIN:Cadherin,DOMAIN:Cadherin 1,DOMAIN:Cadherin 2,DOMAIN:Cadherin 3,DOMAIN:Cadherin 4,DOMAIN:Cadherin 5,DOMAIN:Cadherin 6,REGION:Disordered,TOPO_DOM:Cytoplasmic,TOPO_DOM:Extracellular,TRANSMEM:Helical,
-#ENSG00000108439	pyridoxamine 5'-phosphate oxidase(PNPO)	Homo sapiens	GO:0008615~pyridoxine biosynthetic process,GO:0042818~pyridoxamine metabolic process,GO:0042823~pyridoxal phosphate biosynthetic process,	GO:0005739~mitochondrion,GO:0005829~cytosol,	GO:0004733~pyridoxamine phosphate oxidase activity,GO:0005515~protein binding,GO:0010181~FMN binding,GO:0030170~pyridoxal phosphate binding,GO:0042803~protein homodimerization activity,	IPR000659:Pyridox_Oxase,IPR011576:Pyridox_Oxase_put,IPR012349:Split_barrel_FMN-bd,IPR019576:Pyridoxamine_oxidase_dimer_C,IPR019740:Pyridox_Oxase_CS,	hsa00750:Vitamin B6 metabolism,hsa01100:Metabolic pathways,hsa01240:Biosynthesis of cofactors,	610090~Pyridoxamine 5'-phosphate oxidase deficiency,	PIRSF000190:Pyd_amn-ph_oxd,		KW-0664~Pyridoxine biosynthesis,		KW-0225~Disease variant,KW-0887~Epilepsy,		KW-0285~Flavoprotein,KW-0288~FMN,KW-0663~Pyridoxal phosphate,	KW-0560~Oxidoreductase,	KW-0597~Phosphoprotein,	DOMAIN:Pyridoxamine 5'-phosphate oxidase putative,DOMAIN:Pyridoxine 5'-phosphate oxidase dimerisation C-terminal,MUTAGEN:Missing: Has no effect on the catalytic activity.,MUTAGEN:Missing: Loss of catalytic activity.,REGION:Disordered,
-# ENSG00000129824	ribosomal protein S4 Y-linked 1(RPS4Y1)	Homo sapiens	GO:0006412~translation,	GO:0005634~nucleus,GO:0005654~nucleoplasm,GO:0005829~cytosol,GO:0005840~ribosome,GO:0016020~membrane,GO:0022627~cytosolic small ribosomal subunit,GO:1990904~ribonucleoprotein complex,	GO:0003723~RNA binding,GO:0003735~structural constituent of ribosome,GO:0019843~rRNA binding,	IPR000876:Ribosomal_eS4,IPR002942:S4_RNA-bd,IPR005824:KOW,IPR013843:Ribosomal_eS4_N,IPR013845:Ribosomal_eS4_central_region,IPR014722:Rib_uL2_dom2,IPR018199:Ribosomal_eS4_N_CS,IPR032277:Ribosomal_eS4_C,IPR036986:S4_RNA-bd_sf,IPR038237:Ribosomal_eS4_central_sf,IPR041982:Ribosomal_eS4_KOW,	hsa03010:Ribosome,hsa05171:Coronavirus disease - COVID-19,		PIRSF002116:Ribosomal_S4,	SM00363:S4,						KW-0687~Ribonucleoprotein,KW-0689~Ribosomal protein,KW-0694~RNA-binding,KW-0699~rRNA-binding,		DOMAIN:RNA-binding S4,DOMAIN:S4 RNA-binding,
-
-# There are functional annotations for epilepsy and pyridoxamine 5'-phosphate oxidase deficiency - which is involved in seizures. 
-# In addition to biological process annotations for pyridoxamine biosynthesis pathways.
-```
-
 # heatmap and pca
 ```{r}
 # transform counts w rlog
@@ -167,22 +135,6 @@ pheatmap(sampleDistMatrix,
 # pca and biplot
 plotPCA(transformed_counts, intgroup=c("sample_name"))
 ```
-
-### comment in no less than two paragraphs about your interpretations of these plots and what they indicate about the samples, and the experiment
-```{r}
-# In the PCA biplot PC1 explains 86% of the variance in the dataset. This means that the genes/features found in the linear combinations in
-# PC1 are driving most of the differential gene expression in the dataset. The three control samples cluster closely together indicating
-# that controls have similar gene expression to one another. Interestingly only 2 out of 3 experimental samples cluster together - 
-# experiment replicate 3 clusters separately and slightly closer to controls. The gene expression for experiment 3 is therefore
-# different from the other 2 experimental samples for some reason - possibly a less extreme form of a disease closer to control/healthy gene
-# expression levels.
-
-# The heatmap shows similar gene expression patterns for experimental replicates 1 and 2, as well as between controls. Again,
-# experimental replicate 3 has a similar gene expression pattern to controls. This supports my hypothesis of experimental replicate 3
-# being a less advanced form of the disease being studied, or a different gene expression pattern than experimental replicates 1 and 2
-# for the same disease.
-```
-
 # fgsea and barplot(3F)
 ```{r}
 # join hgnc symbols with deseq2 results
@@ -215,16 +167,6 @@ coord_flip()
 barplot
 ```
 
-### remark on what is interesting in fgsea barplot
-```{r}
-# One of the downregulated pathways is the REACTOME_SARS_COV_1_MODULATES_HOST_TRANSLATION_MACHINERY
-# and we found potential COVID viral genome contamination, which makes me wonder if these samples are
-# in COVID patients. Also there is upregulation in the REACTOME_GLUCURONIDATION which is involved in
-# drug metabolism, so potentially these are COVID patients being treated or just contamination. There are downregulation of
-# pathways related to neurons such as WP_SYNAPTIC_VESICLE_PATHWAY, REACTOME_TRANSMISSION_ACROSS_CHEMICAL_SYNAPSES
-# and REACTOME_NEURONAL_SYSTEM, which match DAVID results for epilepsy. 
-```
-
 ### volcano plot(3C)
 ```{r}
 library(scales)
@@ -254,221 +196,3 @@ volcano_plot <- res_hgnc %>%
 
 volcano_plot
 ```
-
-### questions
-```{r}
-
-num_upreg <- res_hgnc %>%
-  filter(padj < 0.05 & log2FoldChange > 0.25)
-
-nrow(num_upreg)
-#592
-
-num_downreg <- res_hgnc %>%
-  filter(padj < 0.05 & log2FoldChange < -0.25)
-
-nrow(num_downreg)
-#746
-```
-
-```{r}
-#Compare how many significant genes are up- and down-regulated in their findings and yours (using their significance threshold). 
-#Ensure you list how many you find vs. how many they report.
-
-They reported 319 upregulated and 412 downregulated genes at S5 of the differentiation protocol. Similarly I found 592 upregulated and 756 downregulated
-genes. I think since they had more stringent filtering for their data, that is why they found a smaller amount of differentially expressed genes than I did.
-
-#Compare their enrichment results with your DAVID and GSEA analysis. 
-#Comment on any differences you observe and why there are discrepancies.
-
-Overall my DAVID and GSEA analysis was pretty similar to their enrichment results. They found enrichment for extracellular matrix organization,
-signalling by receptor tyrosine kinases, regulation of beta cell development, regulation of gene expression in beta cells, and neuronal system.
-In my DAVID analysis I found GO terms for nervous system development but the rest were not very similar to their enrichment results, possibly
-because my DAVID results are very high-level such as GO term for rna binding and cell adhesion. My FGSEA results were very similar to 
-the enrichment results they found: 
- [1] "REACTOME_ASSEMBLY_OF_COLLAGEN_FIBRILS_AND_OTHER_MULTIMERIC_STRUCTURES"                                                                                                                            
- [3] "REACTOME_MET_ACTIVATES_PTK2_SIGNALING"                                                                                                                                                                
- [5] "REACTOME_COLLAGEN_DEGRADATION"                                                                                                                                                                                                             
-[13] "REACTOME_REGULATION_OF_GENE_EXPRESSION_IN_BETA_CELLS"                                                                                               
-[19] "REACTOME_NEURONAL_SYSTEM"                                                                                      
-[20] "REACTOME_REGULATION_OF_BETA_CELL_DEVELOPMENT"
-The REACTOME_COLLAGEN_DEGRADATION and REACTOME_ASSEMBLY_OF_COLLAGEN_FIBRILS_AND_OTHER_MULTIMERIC_STRUCTURES are similar to the extracellular matrix organization
-enrichment they got since collagen is part of the extracellular matrix. Additionally in REACTOME_MET_ACTIVATES_PTK2_SIGNALING, PTK2 is a tyrosine kinase 
-matching their signalling by receptor tyrosine kinases results. Finally, both my and their results involve the neuronal system and beta cells.
-```
-
-### methods
-```{r}
-The human reference genome (GRCh38) was indexed using STAR(v) with the corresponding GENCODE .gtf file. Next
-paired-end reads were aligned to the reference genome using STAR align(v). The VERSE(v) package was used
-to count gene expression and formatted into a .csv using Python (see counts_matrix.py). Genes with <10 reads across all samples were 
-removed from analysis, as recommended by DESeq2 guidelines. Then the filtered read data was analyzed for differential 
-expression using DESeq2(v1.44.0). Differentially expressed genes were transformed with rlog and PCA was also calculated using DESeq2. 
-Enrichment of differentially expressed genes was analyzed using the FGSEA(v) package using parameters minSize=15 and maxSize=500.
-
-For quality control of reads and alignment, FASTQC(v) was run on .fastq files and compiled into one
-MULTIQC(v) report. The report was checked manually for PHRED scores as well as unmapped reads and GC content.
-
-The paper filtered reads prior to analysis more strictly than I did in. They used Cutadapt to remove adaptors and 
-PHRED scores <25. They also removed reads < 25bp. I hypothesize this would give them "cleaner" data to work
-with when doing differential expression (DE) analysis. Additionally they filtered genes with <50 reads across
-all samples whereas I only filtered genes with <10 reads across all samples. This definitely reduced the
-dimensionality of their dataset more than my filtering process and got rid of any noise from genes with
-low read counts.
-
-The study also used different tools for some of their filtering and analysis which will change the results
-they found versus what I found due to different methodologies/algorithms of the software. In addition to Cutadapt they used 
-Rsubread featureCounts to count read pairs that map to exons instead of VERSE, performed PCA with prcomp, and 
-for enrichment analysis used ClusterProfiler instead of FGSEA. Using ClusterProfiler especially could influence
-gene enrichment results obtained.
-
-```
-
-
-# Project 1 - Discussion Questions
-These questions are meant to help me assess how well I’ve conveyed some of the
-material as well as challenge you to think conceptually about some of the
-underlying science. Some of the questions have a definitive "right" answer while
-some of them are more open-ended and I'm just looking for your thought process
-and interpretation. All of these questions can be answered in a few sentences so
-do your best to be concise.
-
-Please copy these questions into your single Rmd or notebook that you've been 
-working on your DE analysis. All of your analyses, writing, and answers to these
-questions should be in a single notebook. 
-
-
-## RNAseq
-
-1. List the major high-level steps of a basic RNAseq experiment to look for
-differentially expressed genes. At each step, list what data you need to perform
-each step and what format they are in (if applicable). At minimum, there are 4
-essential steps.
-
-The four major steps of an RNAseq experiment for differential gene expression are:
-1. Sample QC (fastq files)
-2. Genome indexing (.gtf and genome fasta) then splice aware alignment of reads to reference genome (reads in fastq files and genome fasta)
-3. QC of alignment (aligned reads in .bam files)
-4. Quantification of alignment with verse (.bam and .gtf files)
-5. Differential expression analysis (counts matrix, coldata in tibble, design formula)
-
-
-2. Consider the following FastQC plot.
-
-```{r}
-knitr::include_graphics("fastqc_plot.png")
-```
-
-
-2a. What aspect of the data does this plot show?
-The plot shows the expected (theoretical) GC count distribution across a read in the reference genome in blue.
-In red is the experimental GC count distribution per read, across all reads.
-
-
-2b. Make an interpretation of this plot assuming the data type was RNASeq.
-
-There is a higher mean GC content per read in the RNAseq experiment than in the theoretical GC content distribution.
-Additionally, there are 2 peaks in the RNAseq experiment.
-
-
-
-2c. Do you think this plot indicates there was a problem with the dataset?
-Explain your answer.
-The experimental GC content distribution per read is bimodal. Possibly this could mean contamination in the
-dataset from a different genome which has a higher GC content per read than correct genome's theoretical GC content distribution.
-
-
-
-2d. Make a hypothesis about what the problem represents. Outline a bioinformatics
-strategy that would enable you to confirm your hypothesis. 
-My hypothesis is that this RNAseq experiment is contaminated with samples from a second genome.
-First I would check to see in my MULTIQC or FASTQC report if there are a large amount of reads that don't align to the reference genome.
-If there are a lot of unaligned reads and they correspond to the peak with higher GC content than expected, then I would use BLAST
-to identify which genome these reads belong to.
-
-
-3. What is a splice-aware aligner? When is it important to use a splice-aware
-aligner?
-
-Splice-aware aligners allow for alignment of reads across splice junctions between exons. It's important
-to use a splice-aware aligner because a non-splice aware aligner might discard these reads.
-
-
-4. What does a “gene-level” count as produced by VERSE or any other counting
-tool in a RNAseq experiment represent?
-
-Gene level count is the total number of reads that align to all exons in a single gene.
-
-5. In your own words, briefly describe what information the matching GTF for a
-reference genome stores.
-
-.gtf files define regions of interest (features) such as exons of the corresponding reference genome. Additionally,
-.gtf files store the name of the chromosome or contig, and genomic coordinates of the feature.
-
-
-6. When counting alignments using VERSE or any other utility, why do we need to
-provide the matching reference genome GTF file?
-
-The .gtf file provides the coordinates for exons which we need in order to count if
-and how many times reads align to in order to count alignments with VERSE.
-
-
-7. Let’s pretend that this was a GSEA result from an experiment where we treated
-293T cells with a drug and compared changes in gene expression to wild-type
-cells treated with a vehicle control. The differential expression results are
-relative to the control cells (i.e. a positive fold change means a gene is
-upregulated upon treatment with the drug)
-
-Assume the following result is statistically significant with a positive NES
-(normalized enrichment score) and that it represents a GSEA experiment performed
-on the entire list of genes discovered in the experiment ranked by
-log2FoldChange (i.e. genes that are “upregulated” in the cells treated with drug
-are on the “left” and genes that are “downregulated” due to treatment are on the
-“right”).
-
-```{r}
-knitr::include_graphics("gsea_plot.png")
-```
-
-
-7a. Form a valid interpretation / conclusion of the results shown in the plot
-given the above setup.
-
-There is an upregulation of genes involved in acute inflammatory response when treated with drug.
-
-7b. Now consider that all of the genes driving the enrichment are all activators
-of the inflammatory pathway. Does your interpretation change and if so, how?
-
-The drug upregulates genes that activate inflammatory response. Previously 
-we did not know if the genes were activators or repressors, just that they were upregulated
-in inflammatory response.
-
-
-7c. Finally, consider that all of the genes driving the enrichment all function
-to inhibit inflammation. Does your interpretation change and if so, how?
-
-The drug upregulates genes that inhibit inflammatory response instead of activate it.
-
-8. Rank the following quality control metrics for a 2x100nt paired-end illumina 
-mRNAseq dataset from most concerning to least concerning. Provide a brief
-statement on where you ranked each and why. Assume that the data has not been
-processed and was provided as-is from the sequencing machine. 
-
-- Unequal Read Lengths
-- Average PHRED score < 20 in the last 10 bases
-- 15% of reads have identical sequences
-- 50% of reads are multimapped after alignment to the appropriate genome
-- 10% of reads are unmapped after alignment to the appropriate genome
-- Non-random nucleotide distribution in the first 6 bases
-- Nucleotide frequencies of ACTG are not equal over the entire read
-- Unequal number of forward and reverse reads
-
-
-1. Unequal Read Lengths --> this is probably due to a library prep error or issue with sequencing, potentially affecting our ability to analyze the data
-2. 50% of reads are multimapped after alignment to the appropriate genome --> potentially this is a highly repetitive genome or we had some sort of PCR bias during sequencing library prep
-3. Unequal number of forward and reverse reads --> this is possibly a sequencing error and affects depth and coverage of our sequencing and therefore our confidence in the sequencing results
-4. Non-random nucleotide distribution in the first 6 bases --> this could possibly be adapter contamination and we can trim the reads
-5. 15% of reads have identical sequences --> this is common depending on what we are sequencing and we can remove identical sequences if necessary
-6. 10% of reads are unmapped after alignment to the appropriate genome --> 90% of reads have mapped to the genome which is a high amount of mapping
-7. Average PHRED score < 20 in the last 10 bases --> it is normal for the PHRED scores to drop off at the beginning and ends of reads and we can correct for this bioinformatically
-8. Nucleotide frequencies of ACTG are not equal over the entire read --> ACTG are typically not equally distributed in a human genome sequence so this is normal
