@@ -35,7 +35,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#results">Results</a></li> 
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -88,31 +87,6 @@ This pipeline is designed for end-to-end RNA-seq preprocessing and quantificatio
 
    ** please update your cluster in the nextflow.config if it isn't sge **
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
----
-
-## Results
-
-- **Enrichment analysis**:  
-  Protein-coding genes associated with high-scoring peaks (>1000) were submitted to EnrichR for functional enrichment. Analysis focused on:  
-  - **GO Biological Processes**: Revealed significant enrichment in pathways related to positive regulation of signal transduction and the Notch signalling pathway - a critical developmental signaling cascade often dysregulated in cancer.
-  - **ChEA 2022 Transcription Factor Targets**: Identified key transcription factors potentially regulating these genes with **RUNX1** prominently enriched.
-    
-  <img width="806" height="300" alt="enrichr_bar_chart" src="https://github.com/user-attachments/assets/1577aedf-85b4-490e-ad24-784f1afdfb5b" />
-
-- **Motif discovery results**:  
-  Identified sequence motifs and candidate transcription factors from peak regions, with **RUNX1** motifs frequently observed, reinforcing its biological relevance alongside enrichment analysis results.
-  
-  <img width="1507" height="787" alt="motif_screenshot" src="https://github.com/user-attachments/assets/a7c0b47d-09af-42ba-a0f3-f93fdf25dc2e" />
-
-- **Integration with RNA-seq data**:  
-  By combining RNA-seq differential expression data with RUNX1 ChIP-seq peak annotations, we analyzed the proximity of RUNX1 binding sites relative to the transcription start site (TSS) of upregulated and downregulated genes.  
-  - A significant proportion of **upregulated genes** show RUNX1 binding within ±5 kb and ±20 kb of their TSS compared to downregulated genes.  
-  - This suggests RUNX1 binding near TSS correlates with gene activation, supporting its role as a key regulator in this context.  
-  - The data were visualized as a stacked bar plot illustrating the percentage of genes bound or not bound by RUNX1 near their TSS in these gene sets.
-    
-  <img width="824" height="602" alt="Screenshot 2025-07-29 at 12 25 07 PM" src="https://github.com/user-attachments/assets/d8044c2e-2d4d-45d3-873d-965a6153c5c1" />
-  <p align="right">(<a href="#readme-top">back to top</a>)</p>  
 
 <!-- CONTACT -->
 ## Contact
